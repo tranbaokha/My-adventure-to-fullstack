@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>This is COVID 19 tracking website</title>
+	<meta charset="utf-8">
+	<meta name="author" content="Tran Bao Kha">
+	<meta name="keyword" content="corona checking">
+	<style type="text/css">
+		h1{
+			text-align: center;
+		}
+		#submitBtn{
+			margin-left: 10px;
+		}
+	</style>
+</head>
+<body>
+	<h1>TRA CỨU THÔNG TIN COVID 19</h1>
+	<p id="kha">NHẬP QUỐC GIA CỦA BẠN ĐỂ XEM TÌNH HÌNH</p>
+	<p id="worldInfo"></p>
+	<p>Quốc gia của bạn: <input type="text" name="country" id="inputCheck"> <button id="submitBtn">Xem thông tin</button></p>
+	<p id="showInfo"></p>
+	<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+	<script>
+		var button = document.getElementById('submitBtn');
+		var showInfo = document.getElementById('showInfo');
+		var worldInfo = document.getElementById('worldInfo');
+		var inputCheck = document.getElementById('inputCheck');
+		axios.get('https://coronavirus-19-api.herokuapp.com/all')
+		.then(function(res){
+			worldInfo.textContent = "Trên thế giới hiện có: " + res.data['cases'] + ", tử vong: " + res.data['deaths'] + ",  hồi phục: " + res.data['recovered'];
+		})
+		button.addEventListener('click', function(){
+			var country = inputCheck.value;
+			axios.get('https://coronavirus-19-api.herokuapp.com/countries')
+			.then(function(res){
+				for(var i of res.data)
+					if(i['country'] === country)
+					{
+						showInfo.textContent = country + " có: " + i['cases'] + " ca nhiễm, " + i['todayCases'] + " ca nhiễm mới, " + i['deaths'] + " người chết, " + i['recovered'] + " người hồi phục." ;
+						
+					}
+			})
+		})
+	</script>
+</body>
+</html>
